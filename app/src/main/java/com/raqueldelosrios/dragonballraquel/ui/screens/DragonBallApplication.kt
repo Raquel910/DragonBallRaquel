@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.rounded.AccountBox
@@ -105,7 +107,8 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                     Text(text = "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
                     Row (
-                        modifier=Modifier.fillMaxSize()
+                        modifier= Modifier
+                            .fillMaxSize()
                             .background(color = colorResource(id = R.color.fire))
 
                     ){
@@ -167,7 +170,8 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                             modifier= Modifier
                                 .weight(0.5f)
                                 .fillMaxHeight()
-                            .background(color = colorResource(id = R.color.red))
+                                .background(color = colorResource(id = R.color.red))
+
 
                         ){
                             selectedCharacter?.let { character ->
@@ -180,7 +184,12 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                                         + character.birthdayYear+ "\n"
                                         + character.information+ "\n"
                                         +character.species
-                                  }""")
+                                  }""",
+                                    modifier=Modifier
+                                        .verticalScroll(rememberScrollState())
+
+
+                                )
                             }
                         }
                     }
