@@ -25,26 +25,7 @@ import com.raqueldelosrios.dragonballraquel.ui.theme.DragonBallRaquelTheme
 fun DragonBallContent (content: @Composable () -> Unit){
     DragonBallRaquelTheme{
         content()
-//        Scaffold (
-//            topBar={
-//                        Image(
-//                            painter = painterResource(id = R.drawable.dragon_ball_una_estrella_con_color_oro_serie_vector_de_colorgood_para_icono_balls_fans_en_el_mundo_214457342),
-//                            contentDescription="Bola de dragon",
-//                            modifier = Modifier.height(100.dp)
-//
-//                        )
-//                        Image(
-//                            painter = painterResource(id = R.drawable._16px_dragon_ball_z_logo),
-//                            contentDescription = "Logo DragonBall"
-//                        )
-//                Text(text = "Akira Toriyama")
-//            },
-//
-//            modifier=Modifier.padding(30.dp),
-//        )
-//        { innerPadding ->
-//            content(Modifier.padding(innerPadding))
-//        }
+
     }
 }
 
