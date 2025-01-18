@@ -20,9 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.rounded.AccountBox
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,12 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,9 +44,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raqueldelosrios.dragonballraquel.DataBase.DragonBallCharacter
-import com.raqueldelosrios.dragonballraquel.DataBase.DragonBallCharacter.Companion.getCharacterById
 import com.raqueldelosrios.dragonballraquel.DataBase.DragonBallCharacter.Companion.sorted
 import com.raqueldelosrios.dragonballraquel.R
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -67,10 +66,13 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(color = colorResource(id = R.color.fire))
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
+
             ) {
+
                 Image(
                     painter = painterResource(id = R.drawable.dragon_ball_una_estrella_con_color_oro_serie_vector_de_colorgood_para_icono_balls_fans_en_el_mundo_214457342),
                     contentDescription = "Bola de dragon",
@@ -92,12 +94,9 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                 if (showImageText) {
                     imageText()
                 }
-
-
-
             }
-
         },
+
         content = { innerPadding ->
             Box(modifier = Modifier
                 .padding(innerPadding)
@@ -112,6 +111,7 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                             .background(color = colorResource(id = R.color.fire))
 
                     ){
+
                         LazyColumn (
                             modifier= Modifier
                                 .weight(0.2f) // Ocupa la mitad del ancho
@@ -175,26 +175,113 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
 
                         ){
                             selectedCharacter?.let { character ->
-                                Text(text = """Información de ${character.spanishName+ "\n"
-                                        +character.otherName+ "\n"
-                                        +character.japaneseName+ "\n"
-                                        +character.gender+ "\n"
-                                        + character.id+ "\n"
-                                        +character.photo+ "\n"
-                                        + character.birthdayYear+ "\n"
-                                        + character.information+ "\n"
-                                        +character.species
-                                  }""",
+                                Text(text = "INFORMACIÓN",
                                     modifier=Modifier
-                                        .verticalScroll(rememberScrollState())
-
-
+                                        .align(Alignment.CenterHorizontally),
+                                    fontWeight = FontWeight.Bold
                                 )
+                                Column (
+                                    modifier = Modifier
+                                        .verticalScroll(rememberScrollState())
+                                        .padding(16.dp)
+                                )
+                                {
+                                    if(character.spanishName.isBlank() || character.spanishName.isEmpty()){
+                                        Row {
+                                            Text(text = "Nombre Español: ",
+                                                fontWeight = FontWeight.Bold)
+                                            Text(text = "No tiene nombre en español")
+                                        }
+
+
+                                    }else{
+                                        Row {
+                                            Text(text = "Nombre Español: ",
+                                                fontWeight = FontWeight.Bold)
+                                            Text(text = "${character.spanishName}")
+                                        }
+                                    }
+
+                                    if(character.otherName.isBlank() || character.spanishName.isEmpty()){
+                                        Row {
+                                            Text(text = "Otro nombre: ",
+                                                fontWeight = FontWeight.Bold)
+                                            Text(text = "No tiene otro nombre")
+                                        }
+
+                                    }else{
+                                        Row {
+                                            Text(text = "Otro nombre: ",
+                                                fontWeight = FontWeight.Bold)
+                                            Text(text = "${character.otherName}")
+                                        }
+                                    }
+                                    Row {
+                                        Text(text = "Nombre Japonés: ",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(text = character.japaneseName)
+                                    }
+
+                                    if(character.birthdayYear== 0){
+                                        Row {
+                                            Text(text = "Cumpleaños: ",
+                                                fontWeight = FontWeight.Bold)
+                                            Text(text = "Dato desconocido")
+                                        }
+
+                                    }else{
+                                        Row {
+                                            Text(text = "Cumpleaños: ",
+                                                fontWeight = FontWeight.Bold)
+                                            Text(text = "${character.birthdayYear}")
+                                        }
+                                    }
+
+
+
+                                    Row {
+                                        Text(text = "Género: ",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(text = character.gender)
+                                    }
+
+                                    Row {
+                                        Text(text = "ID: ",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(text = "${character.id}")
+                                    }
+
+                                    Row {
+                                        Text(text = "Photo: ",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(text = "${character.photo}")
+                                    }
+
+
+                                    Row {
+                                        Text(text = "Info personaje: ",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(text = "${character.information}")
+                                    }
+                                    Row {
+                                        Text(text = "Species: ",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(text = "${character.species}")
+                                    }
+
+                                }
+
+
+
                             }
                         }
                     }
-
-
                 }
             }
         }
