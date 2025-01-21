@@ -14,13 +14,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountBox
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,6 +38,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -43,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.raqueldelosrios.dragonballraquel.DataBase.DragonBallCharacter
 import com.raqueldelosrios.dragonballraquel.DataBase.DragonBallCharacter.Companion.sorted
 import com.raqueldelosrios.dragonballraquel.R
@@ -66,7 +73,7 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = colorResource(id = R.color.fire))
+                    .background(brush = sunsetGradient)
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -76,7 +83,9 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                 Image(
                     painter = painterResource(id = R.drawable.dragon_ball_una_estrella_con_color_oro_serie_vector_de_colorgood_para_icono_balls_fans_en_el_mundo_214457342),
                     contentDescription = "Bola de dragon",
-                    modifier = Modifier.height(100.dp)
+                    modifier = Modifier
+                        .height(100.dp)
+                        .clip(CircleShape)
                 )
                 Image(
                     painter = painterResource(id = R.drawable._16px_dragon_ball_z_logo),
@@ -85,15 +94,6 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
 
                 Text(text = "Akira Toriyama")
 
-                    FloatingActionButton(onClick = {
-                        showImageText = !showImageText
-
-                     }) {
-                        Icon(imageVector = Icons.Rounded.AccountBox, contentDescription = "button")
-                    }
-                if (showImageText) {
-                    imageText()
-                }
             }
         },
 
@@ -102,13 +102,17 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                 .padding(innerPadding)
 
             ) {
-                Column {
+                Column  (
+                    modifier= Modifier
+                        .fillMaxSize()
+                        .background(brush = sunsetGradient)
+                ){
                     Text(text = "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 
                     Row (
                         modifier= Modifier
                             .fillMaxSize()
-                            .background(color = colorResource(id = R.color.fire))
+                            .background(brush = sunsetGradient)
 
                     ){
 
@@ -142,24 +146,29 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
 
                                 items(names) { character ->
                                     Row {
-                                        Text(
-                                            text = character.spanishName,
-                                            fontWeight = FontWeight.Bold,
-                                            modifier = Modifier
-                                                .padding(start = 40.dp)
-                                                .padding(vertical = 8.dp)
-                                        )
-                                        IconButton(
+                                        Button(
                                             onClick = {
-                                                selectedCharacter=character
-                                                showCharacter=!showCharacter
+                                                if (selectedCharacter == character) {
+                                                    showCharacter = !showCharacter
+                                                }else {
+                                                    selectedCharacter = character
+                                                    showCharacter = true
+                                                }
+                                            },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.Transparent,
+                                                contentColor = Color.Black
+                                            ),
+                                        ){
+                                            if(selectedCharacter == character && showCharacter){
+                                                Icon(
+                                                    imageVector = Icons.Rounded.AccountBox,
+                                                    contentDescription = "button"
+                                                )
                                             }
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Rounded.AccountBox,
-                                                contentDescription = "button"
-                                            )
+                                            Text (character.spanishName)
                                         }
+
                                     }
 
                                 }
@@ -170,7 +179,8 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                             modifier= Modifier
                                 .weight(0.5f)
                                 .fillMaxHeight()
-                                .background(color = colorResource(id = R.color.red))
+                                .background(brush = sunsetGradient)
+                                .border(1.dp, colorResource(id = R.color.black))
 
 
                         ){
@@ -184,16 +194,29 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                                     modifier = Modifier
                                         .verticalScroll(rememberScrollState())
                                         .padding(16.dp)
+                                        .border(1.dp, colorResource(id = R.color.black))
                                 )
                                 {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                    ){
+                                        AsyncImage(
+                                            model = character.photo,
+                                            contentDescription = "${character.spanishName} Image",
+                                            modifier= Modifier
+                                                .size(180.dp)
+                                                .padding(12.dp)
+                                        )
+                                    }
                                     if(character.spanishName.isBlank() || character.spanishName.isEmpty()){
-                                        Row {
+                                        Column {
                                             Text(text = "Nombre Español: ",
                                                 fontWeight = FontWeight.Bold)
                                             Text(text = "No tiene nombre en español")
                                         }
-
-
                                     }else{
                                         Row {
                                             Text(text = "Nombre Español: ",
@@ -238,8 +261,6 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                                         }
                                     }
 
-
-
                                     Row {
                                         Text(text = "Género: ",
                                             fontWeight = FontWeight.Bold
@@ -255,14 +276,6 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                                     }
 
                                     Row {
-                                        Text(text = "Photo: ",
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Text(text = "${character.photo}")
-                                    }
-
-
-                                    Row {
                                         Text(text = "Info personaje: ",
                                             fontWeight = FontWeight.Bold
                                         )
@@ -276,17 +289,34 @@ fun DragonBallApplication(modifier: Modifier = Modifier) {
                                     }
 
                                 }
-
-
-
                             }
                         }
                     }
                 }
+                Row(
+                    modifier=Modifier
+                        .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                ) {
+                    FloatingActionButton(onClick = {
+                        showImageText = !showImageText
+
+                    }) {
+                        Icon(imageVector = Icons.Rounded.AccountBox, contentDescription = "button")
+
+                    }
+                    if (showImageText) {
+                        imageText()
+                    }
+
+                }
+
             }
         }
     )
 }
+
+
 
 
 @Composable
@@ -306,7 +336,14 @@ fun imageText(){
             Text(text = "Raquel ")
         }
         }
-
-
 }
+
+//Color degradado fondo escoger
+val sunsetGradient = Brush.linearGradient(
+    colors = listOf(
+        Color(0xFFFFD700), // Golden Yellow
+        Color(0xFFFF8C00), // Dark Orange
+        Color(0xFFFF4500)  // Orange Red
+    )
+)
 
